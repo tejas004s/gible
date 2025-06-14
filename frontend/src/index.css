@@ -3,9 +3,8 @@
   line-height: 1.5;
   font-weight: 400;
 
-  /* Remove forced dark mode base */
   color: #213547;
-  background-color: #f4f7fa; /* or #ffffff */
+  background-color: #f4f7fa;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,7 +20,6 @@ body {
   flex-direction: column;
 }
 
-/* Restore link colors and layout friendliness */
 a {
   font-weight: 500;
   color: #5D7694;
@@ -31,7 +29,6 @@ a:hover {
   color: #E94E3C;
 }
 
-/* Global button reset with optional theming */
 button {
   border-radius: 8px;
   border: none;
@@ -53,11 +50,35 @@ h1 {
   line-height: 1.1;
 }
 
-/* Optional: skip dark mode fallback unless implementing it fully */
+/* 🔆 Responsive Adjustments */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.2em;
+  }
+
+  button {
+    font-size: 0.9em;
+    padding: 0.5em 1em;
+  }
+
+  a {
+    font-size: 0.95em;
+  }
+
+  .navbar-logo {
+    max-height: 40px;
+  }
+}
+
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: #e2e2e2;
     background-color: #121212;
+  }
+
+  a {
+    color: #aad4ff;
   }
 
   a:hover {
@@ -67,5 +88,9 @@ h1 {
   button {
     background-color: #444;
     color: white;
+  }
+
+  button:hover {
+    background-color: #666;
   }
 }

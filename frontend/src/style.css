@@ -1,8 +1,26 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
 
-/* Global Body Styles */
+/* 🌞 Light Mode & Base Styles */
+:root {
+  --bg: #f4f7fa;
+  --text: #213547;
+  --link: #5D7694;
+  --link-hover: #E94E3C;
+  --btn: #3C896D;
+  --btn-hover: #327259;
+  --navbar: #007bff;
+  --white: #ffffff;
+}
+
 body {
-  background-color: #f4f7fa; /* Matches bg-light for consistency */
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  min-width: 320px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Navbar Styles */
@@ -15,7 +33,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: var(--white);
   padding: 2px;
   object-fit: cover;
   transition: transform 0.3s ease;
@@ -51,15 +69,14 @@ body {
 }
 
 .btn-outline-light:hover {
-  background-color: #ffffff;
-  color: #007bff;
+  background-color: var(--white);
+  color: var(--navbar);
   transform: translateY(-2px);
 }
 
 .navbar-toggler {
   border: none;
 }
-
 .navbar-toggler:focus {
   box-shadow: none;
 }
@@ -68,136 +85,13 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Card Styles (Used in Home, Login, Signup, PickupStatus, AdminDashboard, Analytics) */
-.card {
-  border-radius: 12px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+/* ... [retain your existing card, form, button, and table styles here] ... */
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-}
-
-.card-header {
-  border-radius: 12px 12px 0 0;
-  padding: 1.5rem;
-}
-
-.card-body {
-  padding: 2rem;
-}
-
-/* Form Styles (Used in Login, Signup, PickupForm, AdminDashboard) */
-.form-control,
-.form-select {
-  border-radius: 6px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-control:focus,
-.form-select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
-.form-label {
-  color: #333;
-  font-weight: 600;
-}
-
-/* Button Styles */
-.btn-primary {
-  border-radius: 8px;
-  padding: 0.75rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #004085;
-  transform: translateY(-2px);
-}
-
-.btn-success {
-  border-radius: 8px;
-  padding: 0.75rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-success:hover {
-  background-color: #218838;
-  border-color: #1e7e34;
-  transform: translateY(-2px);
-}
-
-.btn-outline-primary {
-  border-radius: 8px;
-  padding: 0.75rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-outline-primary:hover {
-  background-color: #007bff;
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-/* Text Link Styles */
-.text-primary {
-  transition: color 0.3s ease;
-}
-
-.text-primary:hover {
-  color: #0056b3;
-}
-
-/* Specific Component Styles */
-.display-4 {
-  font-size: 3rem;
-}
-
-.lead {
-  font-size: 1.25rem;
-}
-
-.alert-info {
-  border-radius: 8px;
-  transition: opacity 0.3s ease;
-}
-
-/* AdminDashboard Specific */
-.table {
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.table th,
-.table td {
-  vertical-align: middle;
-}
-
-.table thead {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.btn-sm {
-  padding: 0.25rem 0.5rem;
-}
-
-/* Analytics Specific */
-.chart-container {
-  position: relative;
-  width: 100%;
-  height: 400px;
-}
-
-/* Responsive Styles */
+/* 🔄 Responsive Enhancements */
 @media (max-width: 991px) {
   .navbar-nav {
     padding: 1rem 0;
-    background-color: #007bff;
+    background-color: var(--navbar);
     border-radius: 8px;
   }
 
@@ -211,25 +105,18 @@ body {
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 1.5rem;
-  }
-
-  .card-body {
-    padding: 1.5rem;
+  .navbar-logo {
+    width: 36px;
+    height: 36px;
   }
 
   .display-4 {
     font-size: 2.5rem;
   }
 
-  .lead {
-    font-size: 1.1rem;
-  }
-
   .btn-lg {
-    padding: 0.6rem 1.2rem;
     font-size: 1rem;
+    padding: 0.6rem 1.2rem;
   }
 
   .chart-container {
@@ -238,16 +125,8 @@ body {
 }
 
 @media (max-width: 576px) {
-  .container {
-    padding: 1rem;
-  }
-
   .navbar {
     padding: 0.75rem 1rem;
-  }
-
-  .navbar-brand {
-    font-size: 1.1rem;
   }
 
   .navbar-logo {
@@ -259,25 +138,8 @@ body {
     font-size: 0.65rem;
   }
 
-  .nav-link {
-    font-size: 0.9rem;
-  }
-
+  .nav-link,
   .btn-outline-light {
-    font-size: 0.9rem;
-  }
-
-  .card-header h3 {
-    font-size: 1.5rem;
-  }
-
-  .form-control,
-  .form-select,
-  .btn {
-    font-size: 0.9rem;
-  }
-
-  .alert-info {
     font-size: 0.9rem;
   }
 
@@ -296,5 +158,54 @@ body {
 
   .chart-container {
     height: 250px;
+  }
+}
+
+/* 🌙 Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --text: #e2e2e2;
+    --link: #aad4ff;
+    --link-hover: #F9B233;
+    --btn: #444;
+    --btn-hover: #666;
+    --navbar: #1a1a1a;
+    --white: #ffffff;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+  }
+
+  .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .btn-primary,
+  .btn-outline-primary,
+  .btn-success {
+    background-color: var(--btn);
+    border-color: var(--btn);
+  }
+
+  .btn-primary:hover,
+  .btn-outline-primary:hover,
+  .btn-success:hover {
+    background-color: var(--btn-hover);
+    border-color: var(--btn-hover);
+  }
+
+  .form-control,
+  .form-select {
+    background-color: #1e1e1e;
+    color: var(--text);
+    border-color: #333;
+  }
+
+  .card {
+    background-color: #1a1a1a;
+    color: var(--text);
   }
 }
