@@ -9,7 +9,7 @@ function Signup() {
     name: '',
     email: '',
     password: '',
-    role: 'resident',
+    role: 'resident', // Default role
     address: '',
     phone: '',
   });
@@ -25,7 +25,7 @@ function Signup() {
       localStorage.setItem('token', res.data.token);
       alert('Signup successful');
       window.dispatchEvent(new Event('storage'));
-      navigate('/pickup');
+      navigate('/pickup'); // Redirect based on role could be improved (see UI/UX suggestions)
     } catch (err) {
       alert(err.response?.data?.error || 'Signup failed');
     }
@@ -113,7 +113,6 @@ function Signup() {
                 aria-label="Select your role"
               >
                 <option value="resident">Resident</option>
-                <option value="business">Business</option>
                 <option value="admin">Admin</option>
               </select>
             </div>

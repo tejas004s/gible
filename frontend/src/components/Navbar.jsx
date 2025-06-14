@@ -42,11 +42,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary animate__animated animate__fadeIn">
       <div className="container-fluid">
         <Link className="navbar-brand d-flex align-items-center gap-2" to="/" aria-label="Gible Home">
-          <img
-            src={gibleLogo}
-            alt="Gible Logo"
-            className="navbar-logo"
-          />
+          <img src={gibleLogo} alt="Gible Logo" className="navbar-logo" />
           <div className="d-flex flex-column">
             <span className="fw-bold text-white">Gible</span>
             <small className="text-white" style={{ fontSize: '0.75rem' }}>Garbage Disposal App</small>
@@ -68,31 +64,36 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto align-items-center">
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/" aria-label="Go to Home">Home</Link>
+              <Link className="nav-link text-white" to="/">Home</Link>
             </li>
             {!user && (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="/signup" aria-label="Go to Sign Up">Sign Up</Link>
+                  <Link className="nav-link text-white" to="/signup">Sign Up</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="/login" aria-label="Go to Login">Log In</Link>
+                  <Link className="nav-link text-white" to="/login">Log In</Link>
                 </li>
               </>
             )}
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/pickup" aria-label="Schedule a Pickup">Schedule Pickup</Link>
+              <Link className="nav-link text-white" to="/pickup">Schedule Pickup</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/status" aria-label="Check Status">Status</Link>
+              <Link className="nav-link text-white" to="/status">Status</Link>
             </li>
+            {user?.role === 'driver' && (
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/driver">Driver Dashboard</Link>
+              </li>
+            )}
             {user?.role === 'admin' && (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="/admin" aria-label="Go to Admin Dashboard">Admin Dashboard</Link>
+                  <Link className="nav-link text-white" to="/admin">Admin Dashboard</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="/analytics" aria-label="Go to Analytics">Analytics</Link>
+                  <Link className="nav-link text-white" to="/analytics">Analytics</Link>
                 </li>
               </>
             )}
@@ -111,8 +112,8 @@ function Navbar() {
                     className="bi bi-box-arrow-right"
                     viewBox="0 0 16 16"
                   >
-                    <path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                    <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                    <path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                    <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
                   </svg>
                   Log Out
                 </button>

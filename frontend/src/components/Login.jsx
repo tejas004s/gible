@@ -15,9 +15,17 @@ function Login() {
     e.preventDefault();
     try {
       const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, formData);
-      localStorage.setItem('token', res.data.token);
+      const token = res.data.token;
+      localStorage.setItem('token', token);
       alert('Login successful');
-      navigate('/pickup');
+
+      // Decode token to get role (simplified base64 decoding)
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const role = payload.role; // Assumes role is in the token payload
+
+      // Role-based redirect
+      const redirectPath = role === 'admin' ? '/admin' : role === 'driver' ? '/driver' : '/pickup';
+      navigate(redirectPath);
     } catch (err) {
       alert(err.response?.data?.error || 'Login failed');
     }

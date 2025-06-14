@@ -4,17 +4,20 @@ const Analytics = require('../models/Analytics');
 const Pickup = require('../models/Pickup');
 const verifyToken = require('../middleware/auth');
 
-// Create Analytics Entry (Admin only)
+// POST: Create a new analytics entry (Admin only)
 router.post('/', verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Access denied, admin only' });
     }
+
     const { pickupId, wasteType, quantity, date } = req.body;
+
     const pickup = await Pickup.findById(pickupId);
     if (!pickup) {
       return res.status(400).json({ error: 'Pickup not found' });
     }
+
     const analytics = new Analytics({
       userId: pickup.userId,
       pickupId,
@@ -22,6 +25,7 @@ router.post('/', verifyToken, async (req, res) => {
       quantity,
       date,
     });
+
     await analytics.save();
     res.status(201).json(analytics);
   } catch (err) {
@@ -29,20 +33,24 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-// Get Analytics (Admin only, with filters)
+// GET: Retrieve analytics with optional filters (Admin only)
 router.get('/', verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Access denied, admin only' });
     }
+
     const { startDate, endDate, userId } = req.query;
-    let filter = {};
+    const filter = {};
+
     if (startDate && endDate) {
       filter.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
     }
+
     if (userId) {
       filter.userId = userId;
     }
+
     const analytics = await Analytics.aggregate([
       { $match: filter },
       {
@@ -60,7 +68,9 @@ router.get('/', verifyToken, async (req, res) => {
           _id: 0,
         },
       },
+      { $sort: { totalQuantity: -1 } }
     ]);
+
     res.json(analytics);
   } catch (err) {
     res.status(400).json({ error: err.message });
