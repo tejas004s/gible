@@ -23,13 +23,17 @@ function Analytics() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    if (!token) return;
+
     axios
-      .get('http://localhost:5000/api/analytics', {
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/analytics`, {
         headers: { Authorization: `Bearer ${token}` },
         params: filters,
       })
       .then((res) => setAnalyticsData(res.data))
-      .catch((err) => alert(err.response.data.error));
+      .catch((err) => {
+        alert(err.response?.data?.error || 'Failed to fetch analytics');
+      });
   }, [filters]);
 
   const handleFilterChange = (e) =>
@@ -41,19 +45,27 @@ function Analytics() {
       {
         label: 'Total Quantity',
         data: analyticsData.map((item) => item.totalQuantity),
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
       },
     ],
   };
 
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: { display: true, text: 'Waste Collection by Type' },
+    },
+  };
+
   return (
     <div className="container mt-5">
-      <div className="card">
-        <div className="card-header">
+      <div className="card shadow-sm">
+        <div className="card-header bg-success text-white">
           <h3>Waste Analytics</h3>
         </div>
         <div className="card-body">
-          <div className="row mb-3">
+          <div className="row mb-4">
             <div className="col-md-4">
               <label htmlFor="startDate" className="form-label">Start Date</label>
               <input
@@ -85,20 +97,16 @@ function Analytics() {
                 name="userId"
                 value={filters.userId}
                 onChange={handleFilterChange}
-                placeholder="Optional User ID"
+                placeholder="Optional"
               />
             </div>
           </div>
-          <Bar
-            data={chartData}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: { position: 'top' },
-                title: { display: true, text: 'Waste by Type' },
-              },
-            }}
-          />
+
+          {analyticsData.length > 0 ? (
+            <Bar data={chartData} options={chartOptions} />
+          ) : (
+            <p className="text-muted">No data to display. Adjust the filters above.</p>
+          )}
         </div>
       </div>
     </div>

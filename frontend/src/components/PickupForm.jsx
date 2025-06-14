@@ -16,7 +16,7 @@ function PickupForm() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/pickups', formData, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/pickups`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Pickup scheduled');
