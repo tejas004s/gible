@@ -6,6 +6,7 @@ function AdminDashboard() {
   const [pickups, setPickups] = useState([]);
   const [schedules, setSchedules] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +28,8 @@ function AdminDashboard() {
       } catch (err) {
         alert(err.response?.data?.error || 'Something went wrong.');
         if (err.response?.status === 403) navigate('/login');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -50,22 +53,44 @@ function AdminDashboard() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="vh-100 d-flex justify-content-center align-items-center">
+        <div className="spinner-border text-primary" role="status" />
+      </div>
+    );
+  }
+
+const Section = ({ title, children }) => (
+  <div className="card mb-4 shadow-sm border-0" style={{ backgroundColor: '#5D7694', color: '#FDFDFD' }}>
+    <div className="card-header" style={{ backgroundColor: '#F9B233', color: '#333' }}>
+      <h5 className="mb-0">{title}</h5>
+    </div>
+    <div className="card-body">{children}</div>
+  </div>
+);
+
+
   return (
     <div className="container mt-5">
-      <h2 className="mb-4">Admin Dashboard</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="fw-bold">Admin Dashboard</h2>
+        <button className="btn btn-outline-secondary" onClick={() => navigate('/analytics')}>
+          📊 Analytics
+        </button>
+      </div>
 
-      <div className="card mb-4">
-        <div className="card-header">
-          <h3>Pickups</h3>
-        </div>
-        <div className="card-body">
+      <Section title={`🛻 Pickups (${pickups.length})`}>
+        {pickups.length ? (
           <ul className="list-group">
             {pickups.map((pickup) => (
-              <li key={pickup._id} className="list-group-item">
-                User: {pickup.userId?.name || 'Unknown'} | Date: {pickup.date?.slice(0, 10)} | Waste Type: {pickup.wasteType} | Status: {pickup.status}
+              <li key={pickup._id} className="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                  <strong>{pickup.userId?.name || 'Unknown'}</strong> | {pickup.wasteType} |{' '}
+                  {pickup.date?.slice(0, 10)} | {pickup.status}
+                </span>
                 <select
-                  className="form-select d-inline-block ms-2"
-                  style={{ width: 'auto' }}
+                  className="form-select w-auto"
                   value={pickup.status}
                   onChange={(e) => handleStatusUpdate(pickup._id, e.target.value)}
                 >
@@ -77,38 +102,39 @@ function AdminDashboard() {
               </li>
             ))}
           </ul>
-        </div>
-      </div>
+        ) : (
+          <p className="text-muted">No pickup records found.</p>
+        )}
+      </Section>
 
-      <div className="card mb-4">
-        <div className="card-header"><h3>Schedules</h3></div>
-        <div className="card-body">
+      <Section title={`🗓️ Schedules (${schedules.length})`}>
+        {schedules.length ? (
           <ul className="list-group">
-            {schedules.map((schedule) => (
-              <li key={schedule._id} className="list-group-item">
-                Pickup: {schedule.pickupId?.wasteType || 'N/A'} | Driver: {schedule.driverId?.name || 'N/A'} | Date: {schedule.date?.slice(0, 10)} | Time: {schedule.time}
+            {schedules.map((s) => (
+              <li key={s._id} className="list-group-item">
+                Pickup: {s.pickupId?.wasteType || 'N/A'} | Driver: {s.driverId?.name || 'N/A'} | Date:{' '}
+                {s.date?.slice(0, 10)} | Time: {s.time}
               </li>
             ))}
           </ul>
-        </div>
-      </div>
+        ) : (
+          <p className="text-muted">No schedules available.</p>
+        )}
+      </Section>
 
-      <div className="card mb-4">
-        <div className="card-header"><h3>Drivers</h3></div>
-        <div className="card-body">
+      <Section title={`🚚 Drivers (${drivers.length})`}>
+        {drivers.length ? (
           <ul className="list-group">
             {drivers.map((driver) => (
               <li key={driver._id} className="list-group-item">
-                Name: {driver.name} | Phone: {driver.phone} | Vehicle: {driver.vehicleId}
+                <strong>{driver.name}</strong> | Phone: {driver.phone} | Vehicle: {driver.vehicleId}
               </li>
             ))}
           </ul>
-        </div>
-      </div>
-
-      <button className="btn btn-primary" onClick={() => navigate('/analytics')}>
-        View Analytics
-      </button>
+        ) : (
+          <p className="text-muted">No drivers registered yet.</p>
+        )}
+      </Section>
     </div>
   );
 }

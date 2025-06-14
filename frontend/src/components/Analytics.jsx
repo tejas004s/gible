@@ -15,6 +15,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 function Analytics() {
   const [analyticsData, setAnalyticsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
@@ -22,6 +23,7 @@ function Analytics() {
   });
 
   useEffect(() => {
+    setLoading(true);
     const token = localStorage.getItem('token');
     if (!token) return;
 
@@ -31,13 +33,16 @@ function Analytics() {
         params: filters,
       })
       .then((res) => setAnalyticsData(res.data))
-      .catch((err) => {
-        alert(err.response?.data?.error || 'Failed to fetch analytics');
-      });
+      .catch((err) => alert(err.response?.data?.error || 'Failed to fetch analytics'))
+      .finally(() => setLoading(false));
   }, [filters]);
 
   const handleFilterChange = (e) =>
     setFilters({ ...filters, [e.target.name]: e.target.value });
+
+  const resetFilters = () => {
+    setFilters({ startDate: '', endDate: '', userId: '' });
+  };
 
   const chartData = {
     labels: analyticsData.map((item) => item.wasteType),
@@ -45,7 +50,15 @@ function Analytics() {
       {
         label: 'Total Quantity',
         data: analyticsData.map((item) => item.totalQuantity),
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        backgroundColor: analyticsData.map((item) =>
+          item.wasteType === 'organic'
+            ? '#3C896D' // green
+            : item.wasteType === 'plastic'
+            ? '#007bff' // blue
+            : item.wasteType === 'e-waste'
+            ? '#F9B233' // yellow
+            : '#6c757d'
+        ),
       },
     ],
   };
@@ -53,19 +66,28 @@ function Analytics() {
   const chartOptions = {
     responsive: true,
     plugins: {
-      legend: { position: 'top' },
-      title: { display: true, text: 'Waste Collection by Type' },
+      legend: { position: 'top', labels: { color: '#EEE' } },
+      title: {
+        display: true,
+        text: 'Waste Collection by Type',
+        color: '#FFF',
+        font: { size: 18 },
+      },
+    },
+    scales: {
+      x: { ticks: { color: '#EEE' }, grid: { color: '#4A5D72' } },
+      y: { ticks: { color: '#EEE' }, grid: { color: '#4A5D72' } },
     },
   };
 
   return (
     <div className="container mt-5">
-      <div className="card shadow-sm">
-        <div className="card-header bg-success text-white">
-          <h3>Waste Analytics</h3>
+      <div className="card border-0 shadow-lg" style={{ backgroundColor: '#5D7694', color: '#FDFDFD' }}>
+        <div className="card-header" style={{ backgroundColor: '#F9B233', color: '#333' }}>
+          <h3 className="mb-0">Waste Analytics</h3>
         </div>
         <div className="card-body">
-          <div className="row mb-4">
+          <div className="row mb-4 text-dark">
             <div className="col-md-4">
               <label htmlFor="startDate" className="form-label">Start Date</label>
               <input
@@ -95,14 +117,21 @@ function Analytics() {
                 className="form-control"
                 id="userId"
                 name="userId"
+                placeholder="Optional"
                 value={filters.userId}
                 onChange={handleFilterChange}
-                placeholder="Optional"
               />
+              <button className="btn btn-outline-light btn-sm mt-2" onClick={resetFilters}>
+                Reset Filters
+              </button>
             </div>
           </div>
 
-          {analyticsData.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-warning" role="status" />
+            </div>
+          ) : analyticsData.length > 0 ? (
             <Bar data={chartData} options={chartOptions} />
           ) : (
             <p className="text-muted">No data to display. Adjust the filters above.</p>

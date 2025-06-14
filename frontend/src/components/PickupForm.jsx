@@ -1,100 +1,115 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-function PickupForm() {
-  const [formData, setFormData] = useState({
-    date: '',
-    time: '',
-    wasteType: 'recyclable',
-    quantity: 1,
-  });
+function Navbar() {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
+  useEffect(() => {
+    const updateUser = () => {
       const token = localStorage.getItem('token');
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/pickups`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      alert('Pickup scheduled');
-    } catch (err) {
-      alert(err.response.data.error);
-    }
+      if (token) {
+        try {
+          const decoded = JSON.parse(atob(token.split('.')[1]));
+          setUser({ role: decoded.role });
+        } catch (err) {
+          console.error('Invalid token');
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
+    updateUser();
+    window.addEventListener('storage', updateUser);
+    return () => window.removeEventListener('storage', updateUser);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    window.dispatchEvent(new Event('storage'));
+    navigate('/login');
   };
 
+  const gibleLogo = "https://img.pokemondb.net/artwork/gible.jpg";
+
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h3>Schedule Pickup</h3>
-            </div>
-            <div className="card-body">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="date" className="form-label">Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="time" className="form-label">Time</label>
-                  <input
-                    type="time"
-                    className="form-control"
-                    id="time"
-                    name="time"
-                    value={formData.time}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="wasteType" className="form-label">Waste Type</label>
-                  <select
-                    className="form-select"
-                    id="wasteType"
-                    name="wasteType"
-                    value={formData.wasteType}
-                    onChange={handleChange}
-                  >
-                    <option value="recyclable">Recyclable</option>
-                    <option value="organic">Organic</option>
-                    <option value="hazardous">Hazardous</option>
-                    <option value="general">General</option>
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="quantity" className="form-label">Quantity</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="quantity"
-                    name="quantity"
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    min="1"
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary w-100">Schedule</button>
-              </form>
-            </div>
-          </div>
+    <nav className="navbar navbar-expand-lg" style={{ backgroundColor: '#5D7694' }}>
+      <div className="container-fluid">
+        <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
+          <img
+            src={gibleLogo}
+            alt="Gible Logo"
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              backgroundColor: '#F9B233',
+              padding: '2px'
+            }}
+          />
+          <span className="fw-bold text-light">Garbage Disposal</span>
+        </Link>
+        <button
+          className="navbar-toggler text-light"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon" />
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <Link className="nav-link text-light" to="/">Home</Link>
+            </li>
+            {!user && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link text-light" to="/signup">Sign Up</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-light" to="/login">Log In</Link>
+                </li>
+              </>
+            )}
+            <li className="nav-item">
+              <Link className="nav-link text-light" to="/pickup">Schedule Pickup</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link text-light" to="/status">Status</Link>
+            </li>
+            {user?.role === 'admin' && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link text-light" to="/admin">Admin Dashboard</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-light" to="/analytics">Analytics</Link>
+                </li>
+              </>
+            )}
+            {user && (
+              <li className="nav-item">
+                <button
+                  className="btn btn-outline-light btn-sm ms-3 mt-1"
+                  onClick={handleLogout}
+                >
+                  Log Out
+                </button>
+              </li>
+            )}
+          </ul>
         </div>
       </div>
-    </div>
+    </nav>
   );
 }
 
-export default PickupForm;
+export default Navbar;
