@@ -47,36 +47,60 @@ function Analytics() {
   };
 
   return (
-    <div>
-      <h2>Waste Analytics</h2>
-      <div>
-        <input
-          type="date"
-          name="startDate"
-          value={filters.startDate}
-          onChange={handleFilterChange}
-        />
-        <input
-          type="date"
-          name="endDate"
-          value={filters.endDate}
-          onChange={handleFilterChange}
-        />
-        <input
-          type="text"
-          name="userId"
-          value={filters.userId}
-          onChange={handleFilterChange}
-          placeholder="User ID (optional)"
-        />
+    <div className="container mt-5">
+      <div className="card">
+        <div className="card-header">
+          <h3>Waste Analytics</h3>
+        </div>
+        <div className="card-body">
+          <div className="row mb-3">
+            <div className="col-md-4">
+              <label htmlFor="startDate" className="form-label">Start Date</label>
+              <input
+                type="date"
+                className="form-control"
+                id="startDate"
+                name="startDate"
+                value={filters.startDate}
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div className="col-md-4">
+              <label htmlFor="endDate" className="form-label">End Date</label>
+              <input
+                type="date"
+                className="form-control"
+                id="endDate"
+                name="endDate"
+                value={filters.endDate}
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div className="col-md-4">
+              <label htmlFor="userId" className="form-label">User ID</label>
+              <input
+                type="text"
+                className="form-control"
+                id="userId"
+                name="userId"
+                value={filters.userId}
+                onChange={handleFilterChange}
+                placeholder="Optional User ID"
+              />
+            </div>
+          </div>
+          <Bar
+            data={chartData}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Waste by Type' },
+              },
+            }}
+          />
+        </div>
       </div>
-      <Bar
-        data={chartData}
-        options={{
-          responsive: true,
-          plugins: { legend: { position: 'top' }, title: { display: true, text: 'Waste by Type' } },
-        }}
-      />
     </div>
   );
 }

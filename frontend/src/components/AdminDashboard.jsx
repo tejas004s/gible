@@ -15,7 +15,6 @@ function AdminDashboard() {
       return;
     }
 
-    // Fetch Pickups
     axios
       .get('http://localhost:5000/api/pickups', {
         headers: { Authorization: `Bearer ${token}` },
@@ -26,7 +25,6 @@ function AdminDashboard() {
         if (err.response.status === 403) navigate('/login');
       });
 
-    // Fetch Schedules
     axios
       .get('http://localhost:5000/api/schedules', {
         headers: { Authorization: `Bearer ${token}` },
@@ -34,7 +32,6 @@ function AdminDashboard() {
       .then((res) => setSchedules(res.data))
       .catch((err) => alert(err.response.data.error));
 
-    // Fetch Drivers
     axios
       .get('http://localhost:5000/api/drivers', {
         headers: { Authorization: `Bearer ${token}` },
@@ -62,44 +59,66 @@ function AdminDashboard() {
   };
 
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
-      <h3>Pickups</h3>
-      <ul>
-        {pickups.map((pickup) => (
-          <li key={pickup._id}>
-            User: {pickup.userId?.name || 'Unknown'} | Date: {pickup.date.slice(0, 10)} | 
-            Waste Type: {pickup.wasteType} | Status: {pickup.status}
-            <select
-              value={pickup.status}
-              onChange={(e) => handleStatusUpdate(pickup._id, e.target.value)}
-            >
-              <option value="pending">Pending</option>
-              <option value="scheduled">Scheduled</option>
-              <option value="completed">Completed</option>
-              <option value="canceled">Canceled</option>
-            </select>
-          </li>
-        ))}
-      </ul>
-      <h3>Schedules</h3>
-      <ul>
-        {schedules.map((schedule) => (
-          <li key={schedule._id}>
-            Pickup: {schedule.pickupId?.wasteType} | Driver: {schedule.driverId?.name} | 
-            Date: {schedule.date.slice(0, 10)} | Time: {schedule.time}
-          </li>
-        ))}
-      </ul>
-      <h3>Drivers</h3>
-      <ul>
-        {drivers.map((driver) => (
-          <li key={driver._id}>
-            Name: {driver.name} | Phone: {driver.phone} | Vehicle: {driver.vehicleId}
-          </li>
-        ))}
-      </ul>
-      <button onClick={() => navigate('/analytics')}>View Analytics</button>
+    <div className="container mt-5">
+      <h2 className="mb-4">Admin Dashboard</h2>
+      <div className="card mb-4">
+        <div className="card-header">
+          <h3>Pickups</h3>
+        </div>
+        <div className="card-body">
+          <ul className="list-group">
+            {pickups.map((pickup) => (
+              <li key={pickup._id} className="list-group-item">
+                User: {pickup.userId?.name || 'Unknown'} | Date: {pickup.date.slice(0, 10)} | 
+                Waste Type: {pickup.wasteType} | Status: {pickup.status}
+                <select
+                  className="form-select d-inline-block ms-2"
+                  style={{ width: 'auto' }}
+                  value={pickup.status}
+                  onChange={(e) => handleStatusUpdate(pickup._id, e.target.value)}
+                >
+                  <option value="pending">Pending</option>
+                  <option value="scheduled">Scheduled</option>
+                  <option value="completed">Completed</option>
+                  <option value="canceled">Canceled</option>
+                </select>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div className="card mb-4">
+        <div className="card-header">
+          <h3>Schedules</h3>
+        </div>
+        <div className="card-body">
+          <ul className="list-group">
+            {schedules.map((schedule) => (
+              <li key={schedule._id} className="list-group-item">
+                Pickup: {schedule.pickupId?.wasteType} | Driver: {schedule.driverId?.name} | 
+                Date: {schedule.date.slice(0, 10)} | Time: {schedule.time}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div className="card mb-4">
+        <div className="card-header">
+          <h3>Drivers</h3>
+        </div>
+        <div className="card-body">
+          <ul className="list-group">
+            {drivers.map((driver) => (
+              <li key={driver._id} className="list-group-item">
+                Name: {driver.name} | Phone: {driver.phone} | Vehicle: {driver.vehicleId}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <button className="btn btn-primary" onClick={() => navigate('/analytics')}>
+        View Analytics
+      </button>
     </div>
   );
 }
