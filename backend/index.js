@@ -8,10 +8,15 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST', 'PATCH'] },
+  cors: {
+    origin: ['http://localhost:5173', 'https://gible.onrender.com'], // Update with frontend URL after deployment
+    methods: ['GET', 'POST', 'PATCH'],
+  },
 });
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://gible.onrender.com'],
+}));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -33,7 +38,7 @@ app.use('/api/schedules', scheduleRoutes);
 app.use('/api/drivers', driverRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
-app.set('io', io); // Make io available to routes
+app.set('io', io);
 
 app.get('/', (req, res) => res.send('Garbage Disposal API'));
 
